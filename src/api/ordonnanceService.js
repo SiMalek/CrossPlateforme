@@ -22,5 +22,12 @@ export const updateOrdonnance = async (id, updated) => {
 
 export const getOrdonnancesByPatient = async (patientId) => {
   const ords = await getOrdonnances();
-  return ords.filter((o) => o.patientId === patientId);
+  console.log('📦 All ordonnances:', ords.length);
+  console.log('🔍 Filtering by patientId:', patientId);
+  const filtered = ords.filter((o) => {
+    console.log(`Checking ordonnance ${o.id}: ${o.patientId} === ${patientId}?`, o.patientId === patientId);
+    return o.patientId === patientId;
+  });
+  console.log('✅ Filtered ordonnances:', filtered.length);
+  return filtered;
 };

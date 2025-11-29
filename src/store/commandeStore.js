@@ -18,8 +18,10 @@ export const useCommandeStore = create((set) => ({
   },
 
   loadCommandesByPatient: async (patientId) => {
+    console.log('📦 Loading commandes for patient:', patientId);
     set({ isLoading: true });
     const data = await getCommandesByPatient(patientId);
+    console.log('📦 Commandes found:', data.length, data);
     set({ commandes: data, isLoading: false });
   },
 

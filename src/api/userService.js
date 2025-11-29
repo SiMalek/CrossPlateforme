@@ -20,5 +20,16 @@ export const getUserByEmail = async (email) => {
 
 export const authenticateUser = async (email, password) => {
   const users = await getUsers();
-  return users.find((u) => u.email === email && u.password === password);
+  console.log("Total users in database:", users.length);
+  console.log("Searching for user:", email);
+  
+  const user = users.find((u) => u.email === email && u.password === password);
+  
+  if (user) {
+    console.log("User found:", user.name);
+  } else {
+    console.log("User not found. Available emails:", users.map(u => u.email));
+  }
+  
+  return user;
 };

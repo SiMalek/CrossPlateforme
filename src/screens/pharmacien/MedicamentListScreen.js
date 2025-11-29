@@ -1,16 +1,24 @@
-import { useEffect } from "react";
-import { Alert, FlatList, StyleSheet, Text, View } from "react-native";
-import Button from "../../components/common/Button";
+import { Ionicons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
+import { useEffect, useRef } from "react";
+import { Alert, Animated, FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import LoadingSpinner from "../../components/common/LoadingSpinner";
 import MedicamentItem from "../../components/pharmacien/MedicamentItem";
 import { useMedicamentStore } from "../../store/medicamentStore";
 
 export default function MedicamentListScreen({ navigation }) {
   const { medicaments, isLoading, loadMedicaments, deleteMedicament } = useMedicamentStore();
+  const fadeAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     loadMedicaments();
-  }, [loadMedicaments]);
+    
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 600,
+      useNativeDriver: true,
+    }).start();
+  }, [loadMedicaments, fadeAnim]);
 
   // Refresh on focus
   useEffect(() => {
@@ -44,13 +52,24 @@ export default function MedicamentListScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.headerContainer}>
-        <Button
-          title="+ Nouveau médicament"
-          onPress={() => navigation.navigate("MedicamentForm")}
+      <LinearGradient
+        colors={['#43e97b', '#38f9d7']}
+        style={styles.headerGradient}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+      >
+        <Text style={styles.headerTitle}>💊 Médicaments</Text>
+        <Text style={styles.headerSubtitle}>Gérez votre stock de médicaments</Text>
+        
+        <TouchableOpacity
           style={styles.addButton}
-        />
-      </View>
+          onPress={() => navigation.navigate("MedicamentForm")}
+          activeOpacity={0.8}
+        >
+          <Ionicons name="add-circle" size={24} color="#fff" />
+          <Text style={styles.addButtonText}>Nouveau médicament</Text>
+        </TouchableOpacity>
+      </LinearGradient>
 
       {medicaments.length === 0 ? (
         <View style={styles.emptyContainer}>
@@ -78,16 +97,41 @@ export default function MedicamentListScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "#f5f7fa",
   },
-  headerContainer: {
-    padding: 16,
-    backgroundColor: "#fff",
-    borderBottomWidth: 1,
-    borderBottomColor: "#e0e0e0",
+  headerGradient: {
+    paddingTop: 60,
+    paddingBottom: 24,
+    paddingHorizontal: 24,
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
+  },
+  headerTitle: {
+    fontSize: 32,
+    fontWeight: "900",
+    color: "#fff",
+    marginBottom: 8,
+  },
+  headerSubtitle: {
+    fontSize: 16,
+    color: "rgba(255,255,255,0.9)",
+    fontWeight: "500",
+    marginBottom: 20,
   },
   addButton: {
-    marginBottom: 0,
+    backgroundColor: "rgba(255,255,255,0.25)",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 14,
+    paddingHorizontal: 24,
+    borderRadius: 16,
+    gap: 10,
+  },
+  addButtonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "700",
   },
   list: {
     padding: 16,

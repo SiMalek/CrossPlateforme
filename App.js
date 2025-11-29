@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
-import { getItem } from "./src/api/asyncStorage";
 import { seedDatabase } from "./src/data/seedData";
 import AppNavigator from "./src/navigation/AppNavigator";
 
@@ -13,20 +12,15 @@ export default function App() {
 
   const initializeApp = async () => {
     try {
-      // Check if database is already seeded
-      const users = await getItem("users");
-      
-      if (!users || users.length === 0) {
-        console.log("Initializing database with sample data...");
-        await seedDatabase();
-      } else {
-        console.log("Database already initialized");
-      }
+      // FORCE RE-SEED: Clear old data and seed fresh
+      console.log("Force re-seeding database...");
+      await seedDatabase();
+      console.log("Database initialized successfully");
       
       setIsInitialized(true);
     } catch (error) {
       console.error("Error initializing app:", error);
-      setIsInitialized(true); // Continue anyway
+      setIsInitialized(true);
     }
   };
 

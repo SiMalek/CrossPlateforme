@@ -1,5 +1,7 @@
-import { useEffect } from "react";
-import { FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
+import { useEffect, useRef } from "react";
+import { Animated, FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Card from "../../components/common/Card";
 import LoadingSpinner from "../../components/common/LoadingSpinner";
 import CommandeStatusBadge from "../../components/pharmacien/CommandeStatusBadge";
@@ -9,12 +11,19 @@ import { useCommandeStore } from "../../store/commandeStore";
 export default function PharmacienCommandeListScreen({ navigation }) {
   const { commandes, isLoading, loadCommandesByPharmacien } = useCommandeStore();
   const { user, logout } = useAuthStore();
+  const fadeAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     if (user) {
       loadCommandesByPharmacien(user.id);
     }
-  }, [user, loadCommandesByPharmacien]);
+    
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 600,
+      useNativeDriver: true,
+    }).start();
+  }, [user, loadCommandesByPharmacien, fadeAnim]);
 
   // Refresh on focus
   useEffect(() => {
@@ -42,19 +51,30 @@ export default function PharmacienCommandeListScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <View>
-          <Text style={styles.greeting}>Bonjour,</Text>
-          <Text style={styles.userName}>{user?.name || 'Pharmacien'}</Text>
+      <LinearGradient
+        colors={['#43e97b', '#38f9d7']}
+        style={styles.headerGradient}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+      >
+        <View style={styles.headerTop}>
+          <View>
+            <Text style={styles.greeting}>Bonjour 👋</Text>
+            <Text style={styles.userName}>{user?.name || 'Pharmacien'}</Text>
+          </View>
+          <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
+            <Ionicons name="log-out-outline" size={22} color="#fff" />
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
-          <Text style={styles.logoutText}>Déconnexion</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.titleContainer}>
-        <Text style={styles.title}>📋 Commandes reçues</Text>
-        <Text style={styles.subtitle}>Gérez les commandes de vos patients</Text>
-      </View>
+        
+        <Animated.View style={[styles.statsContainer, { opacity: fadeAnim }]}>
+          <View style={styles.statCard}>
+            <Ionicons name="receipt" size={24} color="#fff" />
+            <Text style={styles.statNumber}>{commandes.length}</Text>
+            <Text style={styles.statLabel}>Commandes</Text>
+          </View>
+        </Animated.View>
+      </LinearGradient>
 
       {commandes.length === 0 ? (
         <View style={styles.emptyContainer}>
@@ -91,61 +111,60 @@ export default function PharmacienCommandeListScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f8f9fa",
+    backgroundColor: "#f5f7fa",
   },
-  header: {
+  headerGradient: {
+    paddingTop: 50,
+    paddingBottom: 30,
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
+  },
+  headerTop: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingHorizontal: 20,
-    paddingTop: 60,
-    paddingBottom: 20,
-    backgroundColor: "#34C759",
+    paddingHorizontal: 24,
+    marginBottom: 24,
   },
   greeting: {
-    fontSize: 14,
-    color: "rgba(255,255,255,0.9)",
+    fontSize: 16,
+    color: "rgba(255,255,255,0.95)",
     fontWeight: "500",
   },
   userName: {
-    fontSize: 22,
-    fontWeight: "700",
+    fontSize: 28,
+    fontWeight: "800",
     color: "#fff",
-    marginTop: 2,
+    marginTop: 4,
   },
   logoutButton: {
+    backgroundColor: "rgba(255,255,255,0.25)",
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  statsContainer: {
+    paddingHorizontal: 24,
+  },
+  statCard: {
     backgroundColor: "rgba(255,255,255,0.2)",
-    paddingHorizontal: 16,
-    paddingVertical: 8,
     borderRadius: 20,
-  },
-  logoutText: {
-    color: "#fff",
-    fontSize: 14,
-    fontWeight: "600",
-  },
-  titleContainer: {
-    backgroundColor: "#fff",
     padding: 20,
-    borderBottomLeftRadius: 24,
-    borderBottomRightRadius: 24,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 4,
-    marginBottom: 16,
+    alignItems: "center",
   },
-  title: {
-    fontSize: 28,
-    fontWeight: "700",
-    color: "#1a1a1a",
-    marginBottom: 4,
+  statNumber: {
+    fontSize: 36,
+    fontWeight: "900",
+    color: "#fff",
+    marginTop: 8,
   },
-  subtitle: {
+  statLabel: {
     fontSize: 14,
-    color: "#666",
-    fontWeight: "400",
+    color: "rgba(255,255,255,0.9)",
+    fontWeight: "600",
+    marginTop: 4,
   },
   list: {
     paddingHorizontal: 20,

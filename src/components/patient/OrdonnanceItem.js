@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Card from "../common/Card";
 
 export default function OrdonnanceItem({ ordonnance, onPress }) {
@@ -9,8 +9,9 @@ export default function OrdonnanceItem({ ordonnance, onPress }) {
   };
 
   return (
-    <Card onPress={onPress}>
-      <View style={styles.header}>
+    <TouchableOpacity onPress={onPress} activeOpacity={0.7}>
+      <Card>
+        <View style={styles.header}>
         <View style={styles.iconContainer}>
           <Ionicons name="document-text" size={24} color="#007AFF" />
         </View>
@@ -29,6 +30,7 @@ export default function OrdonnanceItem({ ordonnance, onPress }) {
         <Ionicons name="chevron-forward" size={20} color="#007AFF" />
       </View>
     </Card>
+    </TouchableOpacity>
   );
 }
 

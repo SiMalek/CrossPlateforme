@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Card from "../common/Card";
 
 const STATUS_LABELS = {
@@ -21,7 +21,8 @@ export default function CommandeItem({ commande, onPress }) {
   };
 
   return (
-    <Card onPress={onPress}>
+    <TouchableOpacity onPress={onPress} activeOpacity={0.7}>
+      <Card>
       <View style={styles.header}>
         <View style={styles.iconContainer}>
           <Ionicons name="receipt" size={24} color="#007AFF" />
@@ -40,6 +41,7 @@ export default function CommandeItem({ commande, onPress }) {
         <Ionicons name="chevron-forward" size={20} color="#007AFF" />
       </View>
     </Card>
+    </TouchableOpacity>
   );
 }
 

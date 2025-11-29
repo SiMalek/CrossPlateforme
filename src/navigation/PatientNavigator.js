@@ -40,7 +40,7 @@ function CommandeStackNavigator() {
       <CommandeStack.Screen
         name="CommandeListMain"
         component={CommandeListScreen}
-        options={{ title: "Mes Commandes" }}
+        options={{ headerShown: false }}
       />
       <CommandeStack.Screen
         name="CommandeDetail"

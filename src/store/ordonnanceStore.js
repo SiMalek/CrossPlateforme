@@ -12,8 +12,10 @@ export const useOrdonnanceStore = create((set) => ({
   },
 
   loadOrdonnancesByPatient: async (patientId) => {
+    console.log('🔍 Loading ordonnances for patient:', patientId);
     set({ isLoading: true });
     const data = await getOrdonnancesByPatient(patientId);
+    console.log('📋 Ordonnances found:', data.length, data);
     set({ ordonnances: data, isLoading: false });
   },
 

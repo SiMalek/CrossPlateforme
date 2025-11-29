@@ -1,5 +1,7 @@
-import { useEffect } from "react";
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
+import { useEffect, useRef } from "react";
+import { Animated, StyleSheet, Text, View } from "react-native";
 import LoadingSpinner from "../../components/common/LoadingSpinner";
 import CommandeItem from "../../components/patient/CommandeItem";
 import { useAuthStore } from "../../store/authStore";
@@ -8,12 +10,21 @@ import { useCommandeStore } from "../../store/commandeStore";
 export default function CommandeListScreen({ navigation }) {
   const { commandes, isLoading, loadCommandesByPatient } = useCommandeStore();
   const { user } = useAuthStore();
+  const fadeAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
+    console.log('📦 CommandeList - Current user:', user);
     if (user) {
+      console.log('📦 CommandeList - Loading commandes for user ID:', user.id);
       loadCommandesByPatient(user.id);
     }
-  }, [user, loadCommandesByPatient]);
+    
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 600,
+      useNativeDriver: true,
+    }).start();
+  }, [user, loadCommandesByPatient, fadeAnim]);
 
   // Refresh on focus
   useEffect(() => {
@@ -32,15 +43,28 @@ export default function CommandeListScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
+      <LinearGradient
+        colors={['#4facfe', '#00f2fe']}
+        style={styles.headerGradient}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+      >
+        <Text style={styles.headerTitle}>📦 Mes Commandes</Text>
+        <Text style={styles.headerSubtitle}>Suivez vos commandes en temps réel</Text>
+      </LinearGradient>
+      
       {commandes.length === 0 ? (
-        <View style={styles.emptyContainer}>
-          <Text style={styles.emptyText}>Aucune commande en cours</Text>
+        <Animated.View style={[styles.emptyContainer, { opacity: fadeAnim }]}>
+          <View style={styles.emptyIconContainer}>
+            <Ionicons name="cart-outline" size={80} color="#ccc" />
+          </View>
+          <Text style={styles.emptyText}>Aucune commande</Text>
           <Text style={styles.emptySubtext}>
             Créez une commande à partir d&apos;une ordonnance
           </Text>
-        </View>
+        </Animated.View>
       ) : (
-        <FlatList
+        <Animated.FlatList
           data={commandes}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
@@ -50,6 +74,8 @@ export default function CommandeListScreen({ navigation }) {
             />
           )}
           contentContainerStyle={styles.list}
+          showsVerticalScrollIndicator={false}
+          style={{ opacity: fadeAnim }}
         />
       )}
     </View>
@@ -59,7 +85,25 @@ export default function CommandeListScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f8f9fa",
+    backgroundColor: "#f5f7fa",
+  },
+  headerGradient: {
+    paddingTop: 60,
+    paddingBottom: 30,
+    paddingHorizontal: 24,
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
+  },
+  headerTitle: {
+    fontSize: 32,
+    fontWeight: "900",
+    color: "#fff",
+    marginBottom: 8,
+  },
+  headerSubtitle: {
+    fontSize: 16,
+    color: "rgba(255,255,255,0.9)",
+    fontWeight: "500",
   },
   list: {
     paddingHorizontal: 20,
@@ -72,10 +116,19 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 40,
   },
+  emptyIconContainer: {
+    width: 140,
+    height: 140,
+    borderRadius: 70,
+    backgroundColor: "#f0f0f0",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 24,
+  },
   emptyText: {
-    fontSize: 18,
+    fontSize: 22,
     fontWeight: "700",
-    color: "#666",
+    color: "#333",
     textAlign: "center",
     marginBottom: 8,
   },

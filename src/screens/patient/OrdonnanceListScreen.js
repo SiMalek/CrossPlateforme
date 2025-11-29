@@ -1,5 +1,7 @@
-import { useEffect } from "react";
-import { FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
+import { useEffect, useRef } from "react";
+import { Animated, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import LoadingSpinner from "../../components/common/LoadingSpinner";
 import OrdonnanceItem from "../../components/patient/OrdonnanceItem";
 import { useAuthStore } from "../../store/authStore";
@@ -8,12 +10,37 @@ import { useOrdonnanceStore } from "../../store/ordonnanceStore";
 export default function OrdonnanceListScreen({ navigation }) {
   const { ordonnances, isLoading, loadOrdonnancesByPatient } = useOrdonnanceStore();
   const { user, logout } = useAuthStore();
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(30)).current;
 
   useEffect(() => {
+    console.log('👤 Current user:', user);
     if (user) {
+      console.log('📲 Loading ordonnances for user ID:', user.id);
       loadOrdonnancesByPatient(user.id);
     }
-  }, [user, loadOrdonnancesByPatient]);
+    
+    // Entrance animation
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 600,
+        useNativeDriver: true,
+      }),
+      Animated.spring(slideAnim, {
+        toValue: 0,
+        tension: 50,
+        friction: 7,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [user, loadOrdonnancesByPatient, fadeAnim, slideAnim]);
+
+  useEffect(() => {
+    console.log('📋 Ordonnances in state:', ordonnances.length, ordonnances);
+    console.log('🎨 isLoading:', isLoading);
+    console.log('✅ Will render:', ordonnances.length > 0 ? 'FlatList' : 'Empty state');
+  }, [ordonnances, isLoading]);
 
   const handleLogout = () => {
     logout();
@@ -25,35 +52,66 @@ export default function OrdonnanceListScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <View>
-          <Text style={styles.greeting}>Bonjour,</Text>
-          <Text style={styles.userName}>{user?.name || 'Patient'}</Text>
+      <LinearGradient
+        colors={['#4facfe', '#00f2fe']}
+        style={styles.headerGradient}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+      >
+        <View style={styles.headerTop}>
+          <View>
+            <Text style={styles.greeting}>Bonjour 👋</Text>
+            <Text style={styles.userName}>{user?.name || 'Patient'}</Text>
+          </View>
+          <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
+            <Ionicons name="log-out-outline" size={22} color="#fff" />
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
-          <Text style={styles.logoutText}>Déconnexion</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.titleContainer}>
-        <Text style={styles.title}>📋 Mes Ordonnances</Text>
-        <Text style={styles.subtitle}>Consultez et gérez vos ordonnances</Text>
-      </View>
+        
+        <Animated.View style={[styles.statsContainer, {
+          opacity: fadeAnim,
+          transform: [{ translateY: slideAnim }]
+        }]}>
+          <View style={styles.statCard}>
+            <Ionicons name="document-text" size={24} color="#fff" />
+            <Text style={styles.statNumber}>{ordonnances.length}</Text>
+            <Text style={styles.statLabel}>Ordonnances</Text>
+          </View>
+        </Animated.View>
+      </LinearGradient>
 
       {ordonnances.length === 0 ? (
-        <View style={styles.emptyContainer}>
-          <Text style={styles.emptyText}>Aucune ordonnance disponible</Text>
-        </View>
+        <Animated.View style={[styles.emptyContainer, { opacity: fadeAnim }]}>
+          <View style={styles.emptyIconContainer}>
+            <Ionicons name="document-text-outline" size={80} color="#ccc" />
+          </View>
+          <Text style={styles.emptyText}>Aucune ordonnance</Text>
+          <Text style={styles.emptySubtext}>Vos ordonnances médicales apparaîtront ici</Text>
+        </Animated.View>
       ) : (
-        <FlatList
+        <Animated.FlatList
           data={ordonnances}
           keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <OrdonnanceItem
-              ordonnance={item}
-              onPress={() => navigation.navigate("OrdonnanceDetail", { ordonnance: item })}
-            />
+          renderItem={({ item, index }) => (
+            <Animated.View
+              style={{
+                opacity: fadeAnim,
+                transform: [{
+                  translateY: slideAnim.interpolate({
+                    inputRange: [0, 30],
+                    outputRange: [0, 30 + index * 10]
+                  })
+                }]
+              }}
+            >
+              <OrdonnanceItem
+                ordonnance={item}
+                onPress={() => navigation.navigate("OrdonnanceDetail", { ordonnance: item })}
+              />
+            </Animated.View>
           )}
           contentContainerStyle={styles.list}
+          showsVerticalScrollIndicator={false}
         />
       )}
     </View>
@@ -63,64 +121,65 @@ export default function OrdonnanceListScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f8f9fa",
+    backgroundColor: "#f5f7fa",
   },
-  header: {
+  headerGradient: {
+    paddingTop: 50,
+    paddingBottom: 30,
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
+  },
+  headerTop: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingHorizontal: 20,
-    paddingTop: 60,
-    paddingBottom: 20,
-    backgroundColor: "#007AFF",
+    paddingHorizontal: 24,
+    marginBottom: 24,
   },
   greeting: {
-    fontSize: 14,
-    color: "rgba(255,255,255,0.9)",
+    fontSize: 16,
+    color: "rgba(255,255,255,0.95)",
     fontWeight: "500",
   },
   userName: {
-    fontSize: 22,
-    fontWeight: "700",
+    fontSize: 28,
+    fontWeight: "800",
     color: "#fff",
-    marginTop: 2,
+    marginTop: 4,
   },
   logoutButton: {
+    backgroundColor: "rgba(255,255,255,0.25)",
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  statsContainer: {
+    paddingHorizontal: 24,
+  },
+  statCard: {
     backgroundColor: "rgba(255,255,255,0.2)",
-    paddingHorizontal: 16,
-    paddingVertical: 8,
     borderRadius: 20,
-  },
-  logoutText: {
-    color: "#fff",
-    fontSize: 14,
-    fontWeight: "600",
-  },
-  titleContainer: {
-    backgroundColor: "#fff",
     padding: 20,
-    borderBottomLeftRadius: 24,
-    borderBottomRightRadius: 24,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 4,
-    marginBottom: 16,
+    alignItems: "center",
+    backdropFilter: "blur(10px)",
   },
-  title: {
-    fontSize: 28,
-    fontWeight: "700",
-    color: "#1a1a1a",
-    marginBottom: 4,
+  statNumber: {
+    fontSize: 36,
+    fontWeight: "900",
+    color: "#fff",
+    marginTop: 8,
   },
-  subtitle: {
+  statLabel: {
     fontSize: 14,
-    color: "#666",
-    fontWeight: "400",
+    color: "rgba(255,255,255,0.9)",
+    fontWeight: "600",
+    marginTop: 4,
   },
   list: {
     paddingHorizontal: 20,
+    paddingTop: 20,
     paddingBottom: 20,
   },
   emptyContainer: {
@@ -129,10 +188,25 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 40,
   },
+  emptyIconContainer: {
+    width: 140,
+    height: 140,
+    borderRadius: 70,
+    backgroundColor: "#f0f0f0",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 24,
+  },
   emptyText: {
-    fontSize: 18,
+    fontSize: 22,
+    color: "#333",
+    textAlign: "center",
+    fontWeight: "700",
+    marginBottom: 8,
+  },
+  emptySubtext: {
+    fontSize: 15,
     color: "#999",
     textAlign: "center",
-    fontWeight: "500",
   },
 });
