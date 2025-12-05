@@ -1,0 +1,156 @@
+[
+    {
+        "id": "ph001",
+        "nom": "Pharmacie Centrale",
+        "adresse": "15 Avenue des Champs-Élysées, 75008 Paris",
+        "telephone": "01 45 67 89 01",
+        "pharmacienIds": [
+            "u333"
+        ],
+        "horaires": {
+            "lundi": "08:30 - 20:00",
+            "mardi": "08:30 - 20:00",
+            "mercredi": "08:30 - 20:00",
+            "jeudi": "08:30 - 20:00",
+            "vendredi": "08:30 - 20:00",
+            "samedi": "09:00 - 19:00",
+            "dimanche": "Fermé"
+        },
+        "services": [
+            "Vaccination",
+            "Tests COVID",
+            "Conseil personnalisé",
+            "Livraison à domicile"
+        ],
+        "coordonnees": {
+            "latitude": 48.8698,
+            "longitude": 2.3075
+        },
+        "image": "https://images.unsplash.com/photo-1576602976047-174e57a47881?w=400",
+        "note": 4.8,
+        "avis": 127
+    },
+    {
+        "id": "ph002",
+        "nom": "Pharmacie du Marché",
+        "adresse": "8 Rue de la République, 75011 Paris",
+        "telephone": "01 45 67 89 02",
+        "pharmacienIds": [
+            "u333"
+        ],
+        "horaires": {
+            "lundi": "08:00 - 19:30",
+            "mardi": "08:00 - 19:30",
+            "mercredi": "08:00 - 19:30",
+            "jeudi": "08:00 - 19:30",
+            "vendredi": "08:00 - 19:30",
+            "samedi": "08:30 - 18:00",
+            "dimanche": "Fermé"
+        },
+        "services": [
+            "Orthopédie",
+            "Homéopathie",
+            "Aromathérapie"
+        ],
+        "coordonnees": {
+            "latitude": 48.8566,
+            "longitude": 2.3522
+        },
+        "image": "https://images.unsplash.com/photo-1587854692152-cbe660dbde88?w=400",
+        "note": 4.5,
+        "avis": 89
+    },
+    {
+        "id": "ph003",
+        "nom": "Pharmacie Saint-Michel",
+        "adresse": "22 Boulevard Saint-Michel, 75006 Paris",
+        "telephone": "01 45 67 89 03",
+        "pharmacienIds": [
+            "u666"
+        ],
+        "horaires": {
+            "lundi": "09:00 - 20:00",
+            "mardi": "09:00 - 20:00",
+            "mercredi": "09:00 - 20:00",
+            "jeudi": "09:00 - 20:00",
+            "vendredi": "09:00 - 20:00",
+            "samedi": "09:00 - 19:00",
+            "dimanche": "10:00 - 13:00"
+        },
+        "services": [
+            "Garde de nuit",
+            "Préparations magistrales",
+            "Phytothérapie"
+        ],
+        "coordonnees": {
+            "latitude": 48.8505,
+            "longitude": 2.3436
+        },
+        "image": "https://images.unsplash.com/photo-1631549916768-4119b2e5f926?w=400",
+        "note": 4.9,
+        "avis": 203
+    },
+    {
+        "id": "ph004",
+        "nom": "Pharmacie de la Gare",
+        "adresse": "5 Place de la Gare, 75013 Paris",
+        "telephone": "01 45 67 89 04",
+        "pharmacienIds": [
+            "u666"
+        ],
+        "horaires": {
+            "lundi": "07:00 - 21:00",
+            "mardi": "07:00 - 21:00",
+            "mercredi": "07:00 - 21:00",
+            "jeudi": "07:00 - 21:00",
+            "vendredi": "07:00 - 21:00",
+            "samedi": "08:00 - 20:00",
+            "dimanche": "09:00 - 18:00"
+        },
+        "services": [
+            "Urgences",
+            "Vaccination",
+            "Conseil voyage",
+            "Location matériel médical"
+        ],
+        "coordonnees": {
+            "latitude": 48.8409,
+            "longitude": 2.3730
+        },
+        "image": "https://images.unsplash.com/photo-1585435557343-3b092031a831?w=400",
+        "note": 4.6,
+        "avis": 156
+    },
+    {
+        "id": "ph005",
+        "nom": "Pharmacie Voltaire",
+        "adresse": "30 Rue Voltaire, 75011 Paris",
+        "telephone": "01 45 67 89 05",
+        "pharmacienIds": [
+            "u333",
+            "u666"
+        ],
+        "horaires": {
+            "lundi": "08:00 - 20:30",
+            "mardi": "08:00 - 20:30",
+            "mercredi": "08:00 - 20:30",
+            "jeudi": "08:00 - 20:30",
+            "vendredi": "08:00 - 20:30",
+            "samedi": "08:30 - 19:00",
+            "dimanche": "Fermé"
+        },
+        "services": [
+            "Vaccination",
+            "Dermopharmacie",
+            "Nutrition",
+            "Conseil bébé"
+        ],
+        "coordonnees": {
+            "latitude": 48.8533,
+            "longitude": 2.3889
+        },
+        "image": "https://images.unsplash.com/photo-1586015555751-63bb77f4322a?w=400",
+        "note": 4.7,
+        "avis": 178
+    }
+]

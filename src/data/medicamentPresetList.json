@@ -1,0 +1,57 @@
+[
+    {
+        "nom": "Doliprane",
+        "dosage": "500 mg",
+        "forme": "Comprimé"
+    },
+    {
+        "nom": "Doliprane",
+        "dosage": "1000 mg",
+        "forme": "Comprimé"
+    },
+    {
+        "nom": "Ibuprofène",
+        "dosage": "200 mg",
+        "forme": "Comprimé"
+    },
+    {
+        "nom": "Ibuprofène",
+        "dosage": "400 mg",
+        "forme": "Comprimé"
+    },
+    {
+        "nom": "Amoxicilline",
+        "dosage": "500 mg",
+        "forme": "Gélule"
+    },
+    {
+        "nom": "Amoxicilline",
+        "dosage": "1 g",
+        "forme": "Gélule"
+    },
+    {
+        "nom": "Paracétamol",
+        "dosage": "500 mg",
+        "forme": "Comprimé"
+    },
+    {
+        "nom": "Aspirine",
+        "dosage": "100 mg",
+        "forme": "Comprimé"
+    },
+    {
+        "nom": "Sirop pour la toux",
+        "dosage": "200 ml",
+        "forme": "Sirop"
+    },
+    {
+        "nom": "Azithromycine",
+        "dosage": "250 mg",
+        "forme": "Comprimé"
+    },
+    {
+        "nom": "Oméprazole",
+        "dosage": "20 mg",
+        "forme": "Gélule"
+    }
+]
